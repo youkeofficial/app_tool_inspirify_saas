@@ -6,7 +6,7 @@ import logging
 from flask import Flask, render_template, jsonify, send_from_directory, request
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 from gtts import gTTS
-from moviepy import ImageClip, concatenate_videoclips, AudioFileClip
+from moviepy.editor import ImageClip, concatenate_videoclips, AudioFileClip
 from threading import Thread
 
 # --- CONFIGURATION & LOGGING ---
