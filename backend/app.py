@@ -288,12 +288,12 @@ def api_gen_vid():
         
         clips = []
         for i in valid_imgs:
-            c = ImageClip(os.path.join(GENERATED_DIR, i)).with_duration(sec_per_img)
+            c = ImageClip(os.path.join(GENERATED_DIR, i)).set_duration(sec_per_img)
             c = apply_random_animation(c, sec_per_img)
             clips.append(c)
             
         video = concatenate_videoclips(clips, method="compose")
-        if audio_clip: video = video.with_audio(audio_clip)
+        if audio_clip: video = video.set_audio(audio_clip)
         
         fname = f"video_{uuid.uuid4().hex[:8]}.mp4"
         out_path = os.path.join(GENERATED_DIR, fname)
@@ -345,12 +345,12 @@ def api_gen_wiki_story():
         for s in chunks:
             img_fname = create_quote_image(text=s, author=subject)
             img_path = os.path.join(GENERATED_DIR, img_fname)
-            c = ImageClip(img_path).with_duration(sec_per_img)
+            c = ImageClip(img_path).set_duration(sec_per_img)
             c = apply_random_animation(c, sec_per_img)
             clips.append(c)
             
         video = concatenate_videoclips(clips, method="compose")
-        video = video.with_audio(audio_clip)
+        video = video.set_audio(audio_clip)
         
         vid_fname = f"video_wiki_{uuid.uuid4().hex[:8]}.mp4"
         out_path = os.path.join(GENERATED_DIR, vid_fname)
