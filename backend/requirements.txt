@@ -4,3 +4,6 @@ requests==2.32.3
 waitress==3.0.2
 gTTS==2.5.1
 moviepy==1.0.3
+wikipedia==1.4.0
+mcp==1.2.0
+fastmcp==0.4.1

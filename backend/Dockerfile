@@ -29,4 +29,4 @@ RUN mkdir -p generated static
 EXPOSE 5000
 
 # Use Waitress for production readiness
-CMD ["waitress-serve", "--port=5000", "app:app"]
+CMD ["waitress-serve", "--listen=*:5000", "app:app"]
