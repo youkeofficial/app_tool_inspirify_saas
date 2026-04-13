@@ -28,5 +28,5 @@ RUN mkdir -p generated static
 # Expose the port
 EXPOSE 5000
 
-# Run with Waitress for production readiness
-CMD ["python", "app.py"]
+# Use Waitress for production readiness
+CMD ["waitress-serve", "--port=5000", "app:app"]
