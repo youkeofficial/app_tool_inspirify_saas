@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspirify Pro - SaaS Video Creator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --bg: #0f172a;
+            --card: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --accent: #fbbf24;
+            --success: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; }
+
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 4rem; background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo { font-size: 1.6rem; font-weight: 800; background: linear-gradient(45deg, var(--primary-light), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-item { color: var(--muted); text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; padding: 0.5rem 1rem; border-radius: 8px; }
+        .nav-item.active { color: white; background: rgba(255,255,255,0.05); }
+
+        .container { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
+
+        .card { background: var(--card); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 1.5rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+
+        .btn { background: var(--primary); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(99,102,241,0.4); }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); font-size: 0.8rem; }
+
+        textarea, input { width: 100%; background: #1e293b; border: 1px solid #334155; border-radius: 10px; color: white; padding: 0.8rem; margin-top: 0.5rem; }
+
+        /* SELECTION STYLES */
+        .selectable { cursor: pointer; position: relative; border-radius: 12px; overflow: hidden; border: 3px solid transparent; transition: 0.2s; }
+        .selectable img { width: 100%; height: 120px; object-fit: cover; display: block; }
+        .selectable.selected { border-color: var(--primary); }
+        .selectable.selected::after { content: '✓'; position: absolute; top: 5px; right: 5px; background: var(--primary); color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+
+        .audio-row { display: flex; align-items: center; justify-content: space-between; padding: 0.8rem; background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 0.5rem; border: 1px solid transparent; }
+        .audio-row.selected { border-color: var(--accent); background: rgba(251, 191, 36, 0.05); }
+
+        /* VIDEO STUDIO LAYOUT */
+        .studio-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .studio-sidebar { display: flex; flex-direction: column; gap: 2rem; height: calc(100vh - 200px); overflow-y: auto; padding-right: 1rem; }
+        .studio-main { position: sticky; top: 100px; }
+
+        .hidden { display: none; }
+        .loader { width: 20px; height: 20px; border: 3px solid #fff; border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        h2 { font-size: 1.4rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .timeline-preview { display: flex; gap: 0.5rem; overflow-x: auto; padding: 1rem 0; }
+        .time-item { width: 60px; height: 40px; border-radius: 4px; object-fit: cover; border: 1px solid var(--primary); }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Inspirify Studio</div>
+        <div class="nav-links">
+            <a class="nav-item active" onclick="switchTab(event, 'images')">Images</a>
+            <a class="nav-item" onclick="switchTab(event, 'tts')">Audio</a>
+            <a class="nav-item" onclick="switchTab(event, 'video')">Vidéo Studio</a>
+            <a class="nav-item" onclick="switchTab(event, 'wiki')" style="color:#f59e0b;">Wiki Story ⚡</a>
+            <a href="/docs" class="nav-item" style="color: var(--accent);">Docs API</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <!-- SECTION IMAGES -->
+        <section id="section-images" class="tab-content">
+            <div class="card" style="margin-bottom: 2rem;">
+                <div style="display:flex; gap: 1rem; margin-bottom: 1rem;">
+                    <button class="btn btn-outline" id="btn-mode-auto">Mode Aléatoire</button>
+                    <button class="btn btn-outline" id="btn-mode-manual">Mode Manuel</button>
+                </div>
+                <div id="manual-ui" class="hidden">
+                    <textarea id="inp-text" placeholder="Texte de votre citation..."></textarea>
+                    <input type="text" id="inp-author" placeholder="Auteur">
+                </div>
+                <button class="btn" id="gen-img" style="margin-top: 1rem;">Générer l'Image</button>
+            </div>
+            <h2>Ma Bibliothèque</h2>
+            <div class="grid" id="lib-images-main"></div>
+        </section>
+
+        <!-- SECTION TTS -->
+        <section id="section-tts" class="tab-content hidden">
+            <div class="card">
+                <textarea id="tts-input" placeholder="Texte pour le son..."></textarea>
+                <button class="btn" id="gen-tts" style="margin-top: 1rem;">Générer le Son</button>
+            </div>
+            <h2 style="margin-top: 2rem;">Mes Audios</h2>
+            <div id="lib-audio-main"></div>
+        </section>
+
+        <!-- SECTION VIDEO STUDIO -->
+        <section id="section-video" class="tab-content hidden">
+            <div class="studio-layout">
+                <!-- Sidebar: Resources -->
+                <div class="studio-sidebar">
+                    <div class="card">
+                        <h2>📸 Choisir mes Images</h2>
+                        <div class="grid" id="lib-images-studio" style="grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));"></div>
+                    </div>
+                    <div class="card">
+                        <h2>🎵 Choisir mon Audio</h2>
+                        <div id="lib-audio-studio"></div>
+                    </div>
+                </div>
+
+                <!-- Main: Timeline & Render -->
+                <div class="studio-main">
+                    <div class="card">
+                        <h2>🎬 Montage & Rendu</h2>
+                        
+                        <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom: 1rem;">
+                                <span>Images sélectionnées : <b id="stat-img">0</b></span>
+                                <span>Audio : <b id="stat-aud">Par défaut (15s)</b></span>
+                            </div>
+                            <div class="timeline-preview" id="timeline-imgs"></div>
+                        </div>
+
+                        <div id="video-render-box" class="hidden">
+                            <video id="v-player" controls style="width:100%; border-radius: 12px; margin-bottom: 1rem;"></video>
+                            <a id="v-download" class="btn" style="background: var(--success);" download>Télécharger</a>
+                        </div>
+
+                        <button id="btn-render" class="btn" style="width:100%; height: 60px; font-size: 1.2rem;">Lancer le Rendu</button>
+                        <div id="v-loader" class="hidden" style="margin-top: 1rem;"><div class="loader"></div> Montage en cours...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+        <!-- SECTION WIKI STORY -->
+        <section id="section-wiki" class="tab-content hidden">
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #f59e0b;">⚡ Générateur Wiki Express</h2>
+                <p style="color:var(--muted); margin-bottom: 1.5rem;">Saisissez un sujet. L'IA va chercher le résumé sur Wikipédia, générer plusieurs images incrustées, synthétiser une voix-off, animer les séquences et vous livrer la vidéo finale sans effort !</p>
+                <div style="display: flex; gap: 1rem;">
+                    <input type="text" id="inp-subject" placeholder="Sujet (ex: Rome Antique...)" style="flex: 2;">
+                    <input type="number" id="inp-max-sentences" value="5" min="1" max="15" title="Nombre de phrases maximum à retenir (Défaut: 5)" style="flex: 1;">
+                </div>
+                
+                <button class="btn" id="gen-wiki" style="width: 100%; margin-top: 1rem; background: linear-gradient(45deg, #f59e0b, #d97706); font-size: 1.1rem; height: 50px;">Créer ma Capsule Vidéo</button>
+                <div id="wiki-loader" class="hidden" style="margin-top: 1rem; text-align:center;"><div class="loader"></div> Génération complète en cours... (patientez)</div>
+                
+                <div id="wiki-result" class="hidden" style="margin-top: 2rem;">
+                    <video id="wiki-player" controls style="width:100%; border-radius: 12px; margin-bottom: 1rem;"></video>
+                    <a id="wiki-download" class="btn" style="background: var(--success); width: 100%; display:block; text-align:center;" target="_blank" download>Télécharger la capsule</a>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        let selection = { images: [], audio: null };
+        let mode = 'auto';
+
+        function switchTab(e, id) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('section-'+id).classList.remove('hidden');
+            e.currentTarget.classList.add('active');
+        }
+
+        async function refresh() {
+            const res = await fetch('/history');
+            const data = await res.json();
+            
+            const renderImages = (containerId) => {
+                document.getElementById(containerId).innerHTML = data.images.map(img => `
+                    <div class="selectable ${selection.images.includes(img) ? 'selected' : ''}" onclick="toggleImg('${img}')">
+                        <img src="/generated/${img}">
+                    </div>
+                `).join('');
+            };
+
+            const renderAudio = (containerId) => {
+                document.getElementById(containerId).innerHTML = data.audios.map(aud => `
+                    <div class="audio-row ${selection.audio === aud ? 'selected' : ''}" onclick="selectAud('${aud}')">
+                        <span style="font-size:0.8rem;">${aud}</span>
+                        <button class="btn-outline">${selection.audio === aud ? '✓' : 'Choisir'}</button>
+                    </div>
+                `).join('');
+            };
+
+            renderImages('lib-images-main');
+            renderImages('lib-images-studio');
+            renderAudio('lib-audio-main');
+            renderAudio('lib-audio-studio');
+
+            document.getElementById('stat-img').innerText = selection.images.length;
+            document.getElementById('stat-aud').innerText = selection.audio || "Par défaut (15s)";
+            document.getElementById('timeline-imgs').innerHTML = selection.images.map(img => `<img src="/generated/${img}" class="time-item">`).join('');
+        }
+
+        function toggleImg(img) {
+            if(selection.images.includes(img)) selection.images = selection.images.filter(i => i !== img);
+            else selection.images.push(img);
+            refresh();
+        }
+
+        function selectAud(aud) {
+            selection.audio = (selection.audio === aud) ? null : aud;
+            refresh();
+        }
+
+        // Mode Interaction
+        document.getElementById('btn-mode-auto').onclick = () => { mode='auto'; document.getElementById('manual-ui').classList.add('hidden'); };
+        document.getElementById('btn-mode-manual').onclick = () => { mode='manual'; document.getElementById('manual-ui').classList.remove('hidden'); };
+
+        // API Calls
+        document.getElementById('gen-img').onclick = async () => {
+            const body = mode === 'manual' ? { text: document.getElementById('inp-text').value, author: document.getElementById('inp-author').value } : {};
+            await fetch('/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+            refresh();
+        };
+
+        document.getElementById('gen-tts').onclick = async () => {
+            const text = document.getElementById('tts-input').value;
+            await fetch('/tts', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({text}) });
+            refresh();
+        };
+
+        document.getElementById('btn-render').onclick = async () => {
+            if(selection.images.length === 0) return alert("Sélectionnez au moins une image dans la bibliothèque à gauche.");
+            const btn = document.getElementById('btn-render');
+            const loader = document.getElementById('v-loader');
+            btn.classList.add('hidden'); loader.classList.remove('hidden');
+
+            try {
+                const res = await fetch('/generate_video', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(selection)});
+                const data = await res.json();
+                if(data.status === "success" || data.success) {
+                    const p = document.getElementById('v-player');
+                    p.src = data.url;
+                    document.getElementById('v-download').href = data.url;
+                    document.getElementById('video-render-box').classList.remove('hidden');
+                }
+            } finally { btn.classList.remove('hidden'); loader.classList.add('hidden'); }
+        };
+
+        // Wiki Story Handler
+        document.getElementById('gen-wiki').onclick = async () => {
+            const subject = document.getElementById('inp-subject').value;
+            const max_sentences = parseInt(document.getElementById('inp-max-sentences').value) || 5;
+            
+            if(!subject) return alert("Veuillez entrer un sujet.");
+            
+            const btn = document.getElementById('gen-wiki');
+            const loader = document.getElementById('wiki-loader');
+            const result = document.getElementById('wiki-result');
+            
+            btn.classList.add('hidden'); loader.classList.remove('hidden'); result.classList.add('hidden');
+            try {
+                const res = await fetch('/api/v1/generate/wiki-story', { 
+                    method:'POST', 
+                    headers:{'Content-Type':'application/json'}, 
+                    body:JSON.stringify({subject, max_sentences})
+                });
+                const data = await res.json();
+                if(data.status === "success") {
+                    document.getElementById('wiki-player').src = data.url;
+                    document.getElementById('wiki-download').href = data.url;
+                    result.classList.remove('hidden');
+                    refresh();
+                } else {
+                    alert("Erreur: " + data.message);
+                }
+            } catch (e) {
+                alert("Une erreur de connexion a eu lieu.");
+            } finally {
+                btn.classList.remove('hidden'); loader.classList.add('hidden');
+            }
+        };
+
+        refresh();
+    </script>
+</body>
+</html>

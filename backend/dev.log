@@ -1,0 +1,38 @@
+2026-04-13 16:10:34,171 - DEBUG - [log_request_info] - >>> REQ: POST http://127.0.0.1:5000/api/v1/generate/wiki-story
+2026-04-13 16:10:34,172 - DEBUG - [log_request_info] -     Payload: {'subject': 'Albert Einstein'}
+2026-04-13 16:18:53,897 - DEBUG - [log_response_info] - <<< RES: 200 OK | 1432 bytes
+2026-04-13 16:18:53,915 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/history
+2026-04-13 16:18:53,919 - DEBUG - [log_response_info] - <<< RES: 200 OK | 778 bytes
+2026-04-13 16:18:57,199 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/favicon.ico
+2026-04-13 16:18:57,200 - DEBUG - [log_response_info] - <<< RES: 404 NOT FOUND | 207 bytes
+2026-04-13 16:25:46,741 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/
+2026-04-13 16:25:46,754 - DEBUG - [log_response_info] - <<< RES: 200 OK | 16106 bytes
+2026-04-13 16:25:47,038 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2026-04-13 16:25:47,133 - DEBUG - [log_response_info] - <<< RES: 404 NOT FOUND | 207 bytes
+2026-04-13 16:25:47,195 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/history
+2026-04-13 16:25:47,293 - DEBUG - [log_response_info] - <<< RES: 200 OK | 778 bytes
+2026-04-13 16:37:24,851 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/
+2026-04-13 16:37:24,861 - DEBUG - [log_response_info] - <<< RES: 200 OK | 18866 bytes
+2026-04-13 16:37:24,960 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2026-04-13 16:37:24,965 - DEBUG - [log_response_info] - <<< RES: 404 NOT FOUND | 207 bytes
+2026-04-13 16:37:25,210 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/history
+2026-04-13 16:37:25,270 - DEBUG - [log_response_info] - <<< RES: 200 OK | 778 bytes
+2026-04-13 16:37:37,635 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/
+2026-04-13 16:37:37,648 - DEBUG - [log_response_info] - <<< RES: 200 OK | 16823 bytes
+2026-04-13 16:37:37,797 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2026-04-13 16:37:37,803 - DEBUG - [log_response_info] - <<< RES: 404 NOT FOUND | 207 bytes
+2026-04-13 16:37:38,068 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/history
+2026-04-13 16:37:38,083 - DEBUG - [log_response_info] - <<< RES: 200 OK | 778 bytes
+2026-04-13 16:37:53,710 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/
+2026-04-13 16:37:53,726 - DEBUG - [log_response_info] - <<< RES: 200 OK | 16478 bytes
+2026-04-13 16:37:53,861 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2026-04-13 16:37:53,864 - DEBUG - [log_response_info] - <<< RES: 404 NOT FOUND | 207 bytes
+2026-04-13 16:37:54,046 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/history
+2026-04-13 16:37:54,053 - DEBUG - [log_response_info] - <<< RES: 200 OK | 778 bytes
+2026-04-13 16:38:22,976 - DEBUG - [log_request_info] - >>> REQ: POST http://127.0.0.1:5000/api/v1/generate/wiki-story
+2026-04-13 16:38:22,977 - DEBUG - [log_request_info] -     Payload: {'subject': 'Rome Antique', 'max_sentences': 2}
+2026-04-13 16:39:39,076 - DEBUG - [log_response_info] - <<< RES: 200 OK | 332 bytes
+2026-04-13 16:39:39,089 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/history
+2026-04-13 16:39:39,092 - DEBUG - [log_response_info] - <<< RES: 200 OK | 911 bytes
+2026-04-13 16:39:45,573 - DEBUG - [log_request_info] - >>> REQ: GET http://127.0.0.1:5000/favicon.ico
+2026-04-13 16:39:45,581 - DEBUG - [log_response_info] - <<< RES: 404 NOT FOUND | 207 bytes

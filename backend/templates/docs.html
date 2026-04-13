@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation API - Inspirify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #0f172a;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --card: #1e293b;
+            --accent: #fbbf24;
+            --code-bg: #000;
+        }
+
+        body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; padding: 3rem; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        
+        h1 { font-size: 2.5rem; margin-bottom: 2rem; color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem; }
+        h2 { font-size: 1.5rem; margin-top: 3rem; color: var(--accent); display: flex; align-items: center; gap: 10px; }
+        h3 { font-size: 1rem; color: var(--muted); margin-top: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .code-block { background: var(--code-bg); padding: 1.5rem; border-radius: 12px; font-family: 'Courier New', Courier, monospace; overflow-x: auto; margin: 0.5rem 0 1.5rem 0; font-size: 0.9rem; border: 1px solid #334155; color: #d1d5db; }
+        .method { background: var(--primary); color: white; padding: 4px 12px; border-radius: 6px; font-weight: 800; font-size: 0.85rem; margin-right: 12px; }
+        .method.get { background: #10b981; }
+        
+        .response-label { color: #10b981; font-weight: bold; margin-bottom: 5px; display: block; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; background: rgba(255,255,255,0.02); border-radius: 10px; overflow: hidden; }
+        th, td { text-align: left; padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { color: var(--muted); font-size: 0.85rem; background: rgba(255,255,255,0.05); }
+
+        .back-link { display: inline-block; margin-bottom: 2rem; color: var(--muted); text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .back-link:hover { color: var(--primary); transform: translateX(-5px); }
+
+        .endpoint-url { font-family: monospace; color: var(--primary-light); background: rgba(99, 102, 241, 0.1); padding: 5px 10px; border-radius: 6px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Retour au Studio</a>
+        <h1>Documentation API Inspirify (v1)</h1>
+
+        <p>Base URL : <code class="endpoint-url">http://localhost:5000/api/v1</code></p>
+
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); padding: 1.5rem; border-radius: 12px; margin-top: 2rem;">
+            <h3 style="color: var(--success); margin-top: 0;">🔗 Webhooks (Mode SaaS)</h3>
+            <p style="font-size: 0.9rem;">Vous pouvez ajouter un paramètre <code>webhook_url</code> à n'importe quelle requête POST. Une fois la génération terminée, Inspirify enverra une notification POST JSON à cette adresse avec les détails du fichier généré.</p>
+        </div>
+
+        <!-- ENDPOINT 1 -->
+        <h2>1. Génération d'Image</h2>
+        <p><span class="method">POST</span> <code class="endpoint-url">/generate/image</code></p>
+        
+        <h3>Requête</h3>
+        <div class="code-block">
+            {<br>
+            &nbsp;&nbsp;"text": "La vie est belle",<br>
+            &nbsp;&nbsp;"author": "Anonyme",<br>
+            &nbsp;&nbsp;"webhook_url": "https://votre-site.com/webhook"<br>
+            }
+        </div>
+
+        <h3>Réponse</h3>
+        <div class="code-block" style="border-left: 4px solid #10b981;">
+            {<br>
+            &nbsp;&nbsp;"status": "success",<br>
+            &nbsp;&nbsp;"filename": "quote_a1b2c3d4.jpg",<br>
+            &nbsp;&nbsp;"url": "/generated/quote_a1b2c3d4.jpg"<br>
+            }
+        </div>
+
+        <!-- ENDPOINT 2 -->
+        <h2>2. Synthèse Vocale (TTS)</h2>
+        <p><span class="method">POST</span> <code class="endpoint-url">/generate/tts</code></p>
+
+        <h3>Requête</h3>
+        <div class="code-block">
+            { "text": "Bienvenue dans l'aventure SaaS." }
+        </div>
+
+        <h3>Réponse</h3>
+        <div class="code-block" style="border-left: 4px solid #10b981;">
+            {<br>
+            &nbsp;&nbsp;"status": "success",<br>
+            &nbsp;&nbsp;"filename": "tts_e5f6g7h8.mp3",<br>
+            &nbsp;&nbsp;"url": "/generated/tts_e5f6g7h8.mp3"<br>
+            }
+        </div>
+
+        <!-- ENDPOINT 3 -->
+        <h2>3. Montage Vidéo</h2>
+        <p><span class="method">POST</span> <code class="endpoint-url">/generate/video</code></p>
+
+        <h3>Requête</h3>
+        <div class="code-block">
+            {<br>
+            &nbsp;&nbsp;"images": ["quote_1.jpg", "quote_2.jpg"],<br>
+            &nbsp;&nbsp;"audio": "tts_456.mp3"<br>
+            }
+        </div>
+
+        <h3>Réponse</h3>
+        <div class="code-block" style="border-left: 4px solid #10b981;">
+            {<br>
+            &nbsp;&nbsp;"status": "success",<br>
+            &nbsp;&nbsp;"filename": "video_z9y8x7.mp4",<br>
+            &nbsp;&nbsp;"url": "/generated/video_z9y8x7.mp4"<br>
+            }
+        </div>
+
+        <!-- ENDPOINT 4 -->
+        <h2>4. Bibliothèque</h2>
+        <p><span class="method get">GET</span> <code class="endpoint-url">/library</code></p>
+
+        <h3>Réponse</h3>
+        <div class="code-block" style="border-left: 4px solid #10b981;">
+            {<br>
+            &nbsp;&nbsp;"images": ["quote_1.jpg", "quote_2.jpg"],<br>
+            &nbsp;&nbsp;"audios": ["tts_1.mp3"],<br>
+            &nbsp;&nbsp;"videos": ["video_1.mp4"]<br>
+            }
+        </div>
+
+        <!-- ENDPOINT 5 -->
+        <h2>5. Générateur Complet & Animé (Wiki Story)</h2>
+        <p><span class="method">POST</span> <code class="endpoint-url">/generate/wiki-story</code></p>
+        <p style="font-size: 0.95rem; color: var(--muted); margin-bottom: 1rem;">Outil "All-in-one" : Récupère les données Wikipédia depuis un sujet, découpe le résumé, génère les cartes et le TTS, et applique des effets vidéos d'animations organiques (zoom, fade...).</p>
+
+        <h3>Requête</h3>
+        <div class="code-block">
+            {<br>
+            &nbsp;&nbsp;"subject": "Leonardo da Vinci"<br>
+            }
+        </div>
+
+        <h3>Réponse</h3>
+        <div class="code-block" style="border-left: 4px solid #10b981;">
+            {<br>
+            &nbsp;&nbsp;"status": "success",<br>
+            &nbsp;&nbsp;"filename": "video_wiki_z9y8x7.mp4",<br>
+            &nbsp;&nbsp;"url": "/generated/video_wiki_z9y8x7.mp4",<br>
+            &nbsp;&nbsp;"text": "Leonardo da Vinci était un polymathe italien..."<br>
+            }
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+services:
+  inspirify-app:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: inspirify-saas
+    ports:
+      - "5000:5000"
+    volumes:
+      - inspirify_data:/app/generated
+    restart: always
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  inspirify-mcp:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: inspirify-mcp
+    command: python mcp_server.py
+    environment:
+      - MCP_TRANSPORT=sse
+      - MCP_PORT=8002
+      - QUOTE_API_URL=http://inspirify-app:5000/api/v1
+    ports:
+      - "8002:8002"
+    volumes:
+      - inspirify_data:/app/generated
+    restart: always
+    depends_on:
+      - inspirify-app
+
+volumes:
+  inspirify_data:
+    driver: local
