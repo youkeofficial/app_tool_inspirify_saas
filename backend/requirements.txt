@@ -7,6 +7,6 @@ wikipedia==1.4.0
 mcp==1.2.0
 fastmcp==0.4.1
 waitress==2.1.2
-uvicorn==0.23.2
-starlette==0.27.0
-sse-starlette==1.6.1
+uvicorn>=0.30.0
+starlette
+sse-starlette
