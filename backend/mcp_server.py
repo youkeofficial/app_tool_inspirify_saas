@@ -1,4 +1,4 @@
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 import requests
 
 import os
@@ -83,7 +83,9 @@ if __name__ == "__main__":
     if transport == "sse":
         port = int(os.getenv("MCP_PORT", "8002"))
         print(f"Starting Quote Generator FastMCP Server via SSE on port {port}...")
-        mcp.run(transport="sse", host="0.0.0.0", port=port)
+        mcp.settings.host = "0.0.0.0"
+        mcp.settings.port = port
+        mcp.run(transport="sse")
     else:
         print("Starting Quote Generator FastMCP Server via StdIO...")
         mcp.run()
